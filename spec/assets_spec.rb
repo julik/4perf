@@ -9,6 +9,12 @@ describe 'Sprockets 4 with Rack' do
     Rack::Builder.parse_file(__dir__ + '/../config.ru').first
   }
   
+  it 'serves the shell HTML at /' do
+    get '/'
+    expect(last_response.content_type).to eq('text/html')
+    expect(last_response.body).to include('Experimental page of 4perf')
+  end
+  
   context 'ES6 module file' do
     it 'serves raw contents of an ES6 module' do
       get '/assets/say_hi.es6'
