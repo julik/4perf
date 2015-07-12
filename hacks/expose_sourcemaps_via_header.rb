@@ -9,7 +9,7 @@ class SourceMapExposer
   
   def call(env)
     s, h, b = @sprockets.call(env)
-    if s > 199 && s < 300 && !h['Content-Type'].to_s.include?('sourcemap')
+    if s > 199 && s < 300 && !h['X-SourceMap'] && !env['PATH_INFO'].include?('.map')
       h['X-SourceMap'] = [env['SCRIPT_NAME'], env['PATH_INFO'], '.map'].join
     end
     [s, h, b]
