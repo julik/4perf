@@ -103,7 +103,7 @@ describe 'Sprockets 4 with Rack' do
       get '/assets/style.scss'
       expect(last_response.status).to eq(200)
       expect(last_response.content_type).to include('text/scss')
-      expect(last_response.body).to include('p {')
+      expect(last_response.body).to include("\n  p {")
     end
     
     it 'serves compiled CSS' do
