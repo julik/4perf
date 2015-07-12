@@ -22,9 +22,16 @@ describe 'Sprockets 4 with Rack' do
       expect(last_response.status).to eq(200)
       expect(last_response.content_type).to include('application/javascript')
       expect(last_response.body).to include('Object.defineProperty(exports, "__esModule"')
+      expect(last_response['X-SourceMap']).to eq("/say_hi.js.map")
     end
     
-    it 'serves the source map for the module'
+    it 'serves the source map for the module' do
+      get '/say_hi.js.map'
+      expect(last_response.status).to eq(200)
+      expect(last_response['X-SourceMap']).to be_nil
+      expect(last_response.content_type).to include('sourcemap')
+      expect(last_response.body).to include('mappings')
+    end
   end
   
   context 'CoffeeScript' do
@@ -38,10 +45,17 @@ describe 'Sprockets 4 with Rack' do
     it 'serves compiled CoffeeScript' do
       get '/a_class.js'
       expect(last_response.status).to eq(200)
+      expect(last_response['X-SourceMap']).to eq("/a_class.js.map")
       expect(last_response.content_type).to include('application/javascript')
       expect(last_response.body).to include('Duck.prototype.quack')
     end
     
-    it 'serves the source map for the file'
+    it 'serves the source map for the file' do
+      get '/a_class.js.map'
+      expect(last_response.status).to eq(200)
+      expect(last_response['X-SourceMap']).to be_nil
+      expect(last_response.content_type).to include('sourcemap')
+      expect(last_response.body).to include('mappings')
+    end
   end
 end 
