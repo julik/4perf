@@ -15,6 +15,14 @@ describe 'Sprockets 4 with Rack' do
     expect(last_response.body).to include('Experimental page of 4perf')
   end
   
+  def expect_source_mapping_in(json_response_str)
+    parsed = JSON.load(json_response_str)
+    expect(parsed).to have_key("mappings"), "Sourcemap JSON must have the 'mappings' key"
+    
+    mappings = parsed['mappings']
+    expect(mappings).not_to be_empty, ":mappings should contain, well, the effin sourcemaps - but was empty"
+  end
+  
   context 'ES6 module file' do
     it 'serves raw contents of an ES6 module' do
       get '/assets/say_hi.es6'
@@ -36,7 +44,7 @@ describe 'Sprockets 4 with Rack' do
       expect(last_response.status).to eq(200)
       expect(last_response['X-SourceMap']).to be_nil
       expect(last_response.content_type).to include('sourcemap')
-      expect(last_response.body).to include('mappings')
+      expect_source_mapping_in(last_response.body)
     end
   end
   
@@ -61,7 +69,7 @@ describe 'Sprockets 4 with Rack' do
       expect(last_response.status).to eq(200)
       expect(last_response['X-SourceMap']).to be_nil
       expect(last_response.content_type).to include('sourcemap')
-      expect(last_response.body).to include('mappings')
+      expect_source_mapping_in(last_response.body)
     end
   end
   
@@ -86,8 +94,32 @@ describe 'Sprockets 4 with Rack' do
       expect(last_response.status).to eq(200)
       expect(last_response['X-SourceMap']).to be_nil
       expect(last_response.content_type).to include('sourcemap')
-      puts last_response.body.inspect
-      expect(last_response.body).to include('mappings')
+      expect_source_mapping_in(last_response.body)
+    end
+  end
+  
+  context 'SASS via SCSS' do
+    it 'serves raw SCSS' do
+      get '/assets/style.scss'
+      expect(last_response.status).to eq(200)
+      expect(last_response.content_type).to include('text/scss')
+      expect(last_response.body).to include('p {')
+    end
+    
+    it 'serves compiled CSS' do
+      get '/assets/style.css'
+      expect(last_response.status).to eq(200)
+      expect(last_response['X-SourceMap']).to eq("/assets/style.css.map")
+      expect(last_response.content_type).to include('text/css')
+      expect(last_response.body).to include('.f p {')
+    end
+    
+    it 'serves the source map for the file' do
+      get '/assets/style.css.map'
+      expect(last_response.status).to eq(200)
+      expect(last_response['X-SourceMap']).to be_nil
+      expect(last_response.content_type).to include('sourcemap')
+      expect_source_mapping_in(last_response.body)
     end
   end
 end 
