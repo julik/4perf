@@ -17,7 +17,15 @@ class SourceMapExposer
   end
 end
 
-use SourceMapExposer
-run Sprockets::Environment.new.tap{|e|
-  e.append_path File.dirname(__FILE__) + '/assets'
-}
+map '/assets' do
+  use SourceMapExposer
+  run Sprockets::Environment.new.tap{|e|
+    e.append_path File.dirname(__FILE__) + '/assets'
+  }
+end
+
+map '/' do
+  run ->(env) {
+    [200, {'Content-Type' => 'text/html'}, [File.read(__dir__ + '/index.html')]]
+  }
+end
