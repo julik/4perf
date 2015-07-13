@@ -6,7 +6,7 @@ gem 'sprockets', github: 'rails/sprockets', ref: '962ea355041001d7551d1f4ef1b123
 #gem 'sprockets', '~> 3'
 
 group :development do
-  gem 'sass'
+  gem 'sass', '~> 3.4'
   gem 'rack-test'
   gem 'babel-transpiler'
   gem 'coffee-script'
