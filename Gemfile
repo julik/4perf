@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rack'
 # So far there is no pre-release version of sprockets 4
-gem 'sprockets', github: 'rails/sprockets', ref: '962ea355041001d7551d1f4ef1b1235629613228'
+gem 'sprockets', github: 'rails/sprockets', ref: '343ceb5b6635889d826bd52ec2a89c057ecb5283'
 #gem 'sprockets', '~> 3'
 
 group :development do

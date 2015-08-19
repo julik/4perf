@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/rails/sprockets.git
-  revision: 962ea355041001d7551d1f4ef1b1235629613228
-  ref: 962ea355041001d7551d1f4ef1b1235629613228
+  revision: 343ceb5b6635889d826bd52ec2a89c057ecb5283
+  ref: 343ceb5b6635889d826bd52ec2a89c057ecb5283
   specs:
     sprockets (4.0.0)
       rack (~> 1.0)
@@ -55,4 +55,4 @@ DEPENDENCIES
   therubyracer
 
 BUNDLED WITH
-   1.10.5
+   1.10.6
