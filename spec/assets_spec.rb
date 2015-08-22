@@ -36,13 +36,20 @@ describe 'Sprockets 4 with Rack' do
       expect(last_response.status).to eq(200)
       expect(last_response.content_type).to include('application/javascript')
       expect(last_response.body).to include('Object.defineProperty(exports, "__esModule"')
-      expect(last_response['X-SourceMap']).to eq("/assets/say_hi.js.map")
+    end
+    
+    it 'serves compiled contents of an ES6 module with a source map hint if .debug extension is applied' do
+      get '/assets/say_hi.debug.js'
+      expect(last_response.status).to eq(200)
+      expect(last_response.content_type).to include('application/javascript')
+      expect(last_response.body).to include('Object.defineProperty(exports, "__esModule"')
+      expect(last_response.body).to include('# sourceMappingURL=')
+      # expect(last_response['X-SourceMap']).to eq("/assets/say_hi.js.map")
     end
     
     it 'serves the source map for the module' do
       get '/assets/say_hi.js.map'
       expect(last_response.status).to eq(200)
-      expect(last_response['X-SourceMap']).to be_nil
       expect(last_response.content_type).to include('sourcemap')
       expect_source_mapping_in(last_response.body)
     end
@@ -59,15 +66,22 @@ describe 'Sprockets 4 with Rack' do
     it 'serves compiled CoffeeScript' do
       get '/assets/a_class.js'
       expect(last_response.status).to eq(200)
-      expect(last_response['X-SourceMap']).to eq("/assets/a_class.js.map")
       expect(last_response.content_type).to include('application/javascript')
       expect(last_response.body).to include('Duck.prototype.quack')
+    end
+    
+    it 'serves compiled CoffeeScript with a sourcemap hint if requested with .debug extension' do
+      get '/assets/a_class.debug.js'
+      expect(last_response.status).to eq(200)
+      # expect(last_response['X-SourceMap']).to eq("/assets/a_class.js.map")
+      expect(last_response.content_type).to include('application/javascript')
+      expect(last_response.body).to include('Duck.prototype.quack')
+      expect(last_response.body).to include('# sourceMappingURL=')
     end
     
     it 'serves the source map for the file' do
       get '/assets/a_class.js.map'
       expect(last_response.status).to eq(200)
-      expect(last_response['X-SourceMap']).to be_nil
       expect(last_response.content_type).to include('sourcemap')
       expect_source_mapping_in(last_response.body)
     end
@@ -84,15 +98,21 @@ describe 'Sprockets 4 with Rack' do
     it 'serves compiled JS' do
       get '/assets/application.js'
       expect(last_response.status).to eq(200)
-      expect(last_response['X-SourceMap']).to eq("/assets/application.js.map")
       expect(last_response.content_type).to include('application/javascript')
       expect(last_response.body).to include('function _interopRequireDefault')
+    end
+    
+    it 'serves compiled JS with a sourcemap indication when requested with a .debug extension' do
+      get '/assets/application.debug.js'
+      expect(last_response.status).to eq(200)
+      expect(last_response.content_type).to include('application/javascript')
+      expect(last_response.body).to include('function _interopRequireDefault')
+      expect(last_response.body).to include('# sourceMappingURL=')
     end
     
     it 'serves the source map for the file' do
       get '/assets/application.js.map'
       expect(last_response.status).to eq(200)
-      expect(last_response['X-SourceMap']).to be_nil
       expect(last_response.content_type).to include('sourcemap')
       expect_source_mapping_in(last_response.body)
     end
@@ -109,15 +129,21 @@ describe 'Sprockets 4 with Rack' do
     it 'serves compiled CSS' do
       get '/assets/style.css'
       expect(last_response.status).to eq(200)
-      expect(last_response['X-SourceMap']).to eq("/assets/style.css.map")
       expect(last_response.content_type).to include('text/css')
       expect(last_response.body).to include('.f p {')
+    end
+    
+    it 'serves compiled CSS with a sourcemap indication if requested with .debug extension' do
+      get '/assets/style.debug.css'
+      expect(last_response.status).to eq(200)
+      expect(last_response.content_type).to include('text/css')
+      expect(last_response.body).to include('.f p {')
+      expect(last_response.body).to include('# sourceMappingURL=')
     end
     
     it 'serves the source map for the file' do
       get '/assets/style.css.map'
       expect(last_response.status).to eq(200)
-      expect(last_response['X-SourceMap']).to be_nil
       expect(last_response.content_type).to include('sourcemap')
       expect_source_mapping_in(last_response.body)
     end
